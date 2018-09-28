@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+body {
+	margin-top: 20px;
+}
+
+a {
+	display: block;
+	font-size: 18px;
+	padding: 5px 0;
+}

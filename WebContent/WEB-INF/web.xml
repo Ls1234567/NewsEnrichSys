@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>NewsEnrichSys</display-name>
+  <welcome-file-list>
+    <welcome-file>html/index.html</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>TitleServlet</display-name>
+    <servlet-name>TitleServlet</servlet-name>
+    <servlet-class>name.sxli.controller.TitleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TitleServlet</servlet-name>
+    <url-pattern>/TitleServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ContentServlet</display-name>
+    <servlet-name>ContentServlet</servlet-name>
+    <servlet-class>name.sxli.controller.ContentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ContentServlet</servlet-name>
+    <url-pattern>/ContentServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
