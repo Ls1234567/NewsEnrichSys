@@ -63,9 +63,10 @@ function addEntity(obj) { //单独添加
 	});
 	if(isContain==false){
 		var entity = $("<button class='btn btn-info' id='"+obj.id+"' onclick='removeEntity(this)'></button>").text(obj.innerText);
-		var close = $("<div class='close'></div>");
-		var div = $("<div>"+entity+close+"</div>")
-		car.append(div); //添加实体
+		car.append(entity);
+//		var close = $("<div class='close'></div>");
+//		var div = $("<div>"+entity+close+"</div>")
+//		car.append(div); //添加实体
 	}
 }
 

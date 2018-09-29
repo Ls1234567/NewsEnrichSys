@@ -62,21 +62,36 @@ public class ContentServlet extends HttpServlet {
 	    		content = rs.getString(2);
 	    		String[] titleNames = rs.getString(3).split(";");
 	    		String[] titleUris = rs.getString(5).split(";");
+	    		String[] contentNames = rs.getString(4).split(";");
+	    		String[] contentUris = rs.getString(6).split(";");
 	    		for(int i=0; i<titleNames.length; i++){
 	    			String name = titleNames[i];
 	    			String uri = titleUris[i];
-	    			title = title.replaceAll(name, "<a id='"+uri+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
+	    			sql = "select type from instance_type where instance='<http://dbpedia.org/resource/"+uri+">'";
+	    			Statement smt2 = dbHelper.conn.createStatement();
+	    			ResultSet rs2 = smt2.executeQuery(sql);
+//	    			rs2.next();
+//	    			String type = rs2.getString(1);
+	    			String type = rs2.next() ? rs2.getString(1):"null";
+	    			if(!type.equals("null") && !type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
+	    				type = type.substring(29, type.length()-1);
+	    			else if(type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
+	    				type = "Thing";
+	    			title = title.replaceAll(name, "<a id='"+uri+";"+type+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
 	    		}
-	    		String[] contentNames = rs.getString(4).split(";");
-	    		String[] contentUris = rs.getString(6).split(";");
 	    		for(int i=0; i<contentNames.length; i++){
 	    			String name = contentNames[i];
 	    			String uri = contentUris[i];
 	    			sql = "select type from instance_type where instance='<http://dbpedia.org/resource/"+uri+">'";
-	    			rs = smt.executeQuery(sql);
-	    			rs.next();
-	    			String type = rs.getString(1);
-	    			type = type.substring(29, type.length()-1);
+	    			Statement smt2 = dbHelper.conn.createStatement();
+	    			ResultSet rs2 = smt2.executeQuery(sql);
+//	    			rs2.next();
+//	    			String type = rs2.getString(1);
+	    			String type = rs2.next() ? rs2.getString(1):"null";
+	    			if(!type.equals("null") && !type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
+	    				type = type.substring(29, type.length()-1);
+	    			else if(type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
+	    				type = "Thing";
 	    			// id = uri+";"+type
 	    			content = content.replaceAll(name, "<a id='"+uri+";"+type+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
 	    		}
@@ -118,10 +133,12 @@ public class ContentServlet extends HttpServlet {
 	    			uris.add(uri);
 	    		for(String uri:uris){
 	    			sql = "select type from instance_type where instance='<http://dbpedia.org/resource/"+uri+">'";
-	    			rs = smt.executeQuery(sql);
-	    			rs.next();
-	    			String type = rs.getString(1);
-	    			if(!type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
+	    			Statement smt2 = dbHelper.conn.createStatement();
+	    			ResultSet rs2 = smt2.executeQuery(sql);
+//	    			rs2.next();
+//	    			String type = rs2.getString(1);
+	    			String type = rs2.next() ? rs2.getString(1):"null";
+	    			if(!type.equals("null") && !type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
 	    				types.add(type.substring(29, type.length()-1));
 	    		}
 			} catch (SQLException e) {
