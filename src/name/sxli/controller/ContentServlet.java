@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,12 +61,24 @@ public class ContentServlet extends HttpServlet {
 	    		title = rs.getString(1);
 	    		content = rs.getString(2);
 	    		String[] titleNames = rs.getString(3).split(";");
-	    		for(String name:titleNames){
-	    			title = title.replaceAll(name, "<a id='"+name+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
+	    		String[] titleUris = rs.getString(5).split(";");
+	    		for(int i=0; i<titleNames.length; i++){
+	    			String name = titleNames[i];
+	    			String uri = titleUris[i];
+	    			title = title.replaceAll(name, "<a id='"+uri+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
 	    		}
 	    		String[] contentNames = rs.getString(4).split(";");
-	    		for(String name:contentNames){
-	    			content = content.replaceAll(name, "<a id='"+name+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
+	    		String[] contentUris = rs.getString(6).split(";");
+	    		for(int i=0; i<contentNames.length; i++){
+	    			String name = contentNames[i];
+	    			String uri = contentUris[i];
+	    			sql = "select type from instance_type where instance='<http://dbpedia.org/resource/"+uri+">'";
+	    			rs = smt.executeQuery(sql);
+	    			rs.next();
+	    			String type = rs.getString(1);
+	    			type = type.substring(29, type.length()-1);
+	    			// id = uri+";"+type
+	    			content = content.replaceAll(name, "<a id='"+uri+";"+type+"' href='javascript:void(0);' onclick='addEntity(this)'>"+name+"</a>");
 	    		}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -83,6 +97,40 @@ public class ContentServlet extends HttpServlet {
 //			System.out.println(content);
 			News news = new News(title, content);
 			String jsonString = JSON.toJSONString(news,true).toString();
+    	    out.write(jsonString);
+    	}
+    	else if(option.equals("getTypes")){
+    		Integer id = Integer.parseInt(request.getParameter("id"));
+    		Set<String> types = new HashSet<>();
+    		String sql = "select title_uris,content_uris from chosen_news where id="+id;
+    		DBHelper dbHelper = new DBHelper();
+    		Statement smt;
+			try {
+				smt = dbHelper.conn.createStatement();
+	    		ResultSet rs = smt.executeQuery(sql);
+	    		rs.next();
+	    		String[] titleUris = rs.getString(1).split(";");
+	    		String[] contentUris = rs.getString(2).split(";");
+	    		Set<String> uris = new HashSet<>();
+	    		for(String uri:titleUris)
+	    			uris.add(uri);
+	    		for(String uri:contentUris)
+	    			uris.add(uri);
+	    		for(String uri:uris){
+	    			sql = "select type from instance_type where instance='<http://dbpedia.org/resource/"+uri+">'";
+	    			rs = smt.executeQuery(sql);
+	    			rs.next();
+	    			String type = rs.getString(1);
+	    			if(!type.equals("<http://www.w3.org/2002/07/owl#Thing>"))
+	    				types.add(type.substring(29, type.length()-1));
+	    		}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for(String type:types)
+				System.out.println(type);
+			String jsonString = JSON.toJSONString(types,true).toString();
     	    out.write(jsonString);
     	}
 	}

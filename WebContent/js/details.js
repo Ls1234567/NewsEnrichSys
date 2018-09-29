@@ -17,20 +17,55 @@ $.ajax({
 	success:function(d){
 		$('#title').html(d.title);
 		$('#content').html(d.content);
+		$.ajax({
+			url:"http://localhost:8080/NewsEnrichSys/ContentServlet?option=getTypes&id="+id,
+			type:"get",
+			dataType:"json",
+			async:false,
+			success:function(d){
+				$.each(d, function(i, val){
+					var type = $("<button class='btn btn-default' onclick='addTypeEntities(this)'></button>").text(val);
+					$('#types').append(type);
+				});
+			}
+		})
 	}
 })
 
-
 var car = $('#car');
-function addEntity(obj) {
+function addTypeEntities(obj){
+	$('#app a').each(function() {
+//		console.log($(this).attr('id'));
+		if($(this).attr('id').split(";")[1] == obj.innerText){
+			addTypeEntity($(this));
+		}
+			
+	});
+}
+
+function addTypeEntity(obj) { //使用type添加
+	var isContain = false;
+	car.children().each(function(){
+		if($(this).text() == obj.text())
+			isContain = true;
+	});
+	if(isContain==false){
+		var entity = $("<button class='btn btn-info' id='"+obj.attr('id')+"' onclick='removeEntity(this)'></button>").text(obj.text());
+		car.append(entity); //添加实体
+	}
+}
+
+function addEntity(obj) { //单独添加
 	var isContain = false;
 	car.children().each(function(){
 		if($(this).text() == obj.innerText)
 			isContain = true;
 	});
 	if(isContain==false){
-		var entity = $("<button class='btn btn-info' onclick='removeEntity(this)'></button>").text(obj.innerText);
-		car.append(entity); //添加实体
+		var entity = $("<button class='btn btn-info' id='"+obj.id+"' onclick='removeEntity(this)'></button>").text(obj.innerText);
+		var close = $("<div class='close'></div>");
+		var div = $("<div>"+entity+close+"</div>")
+		car.append(div); //添加实体
 	}
 }
 
