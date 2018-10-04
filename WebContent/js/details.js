@@ -94,7 +94,7 @@ function showResults(){
 		dataType:"json",
 		async:false,
 		success:function(d){
-			console.log(d);
+			console.log(d); //松弛结果，id数组
 		}
 	});
 }
