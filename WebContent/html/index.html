@@ -12,13 +12,17 @@
   <div id="app">
   	<div class="container">
   		<h1>News List</h1>
-  		<a v-for="item in newsList" id="news-title" v-bind:href="['http://localhost:8080/NewsEnrichSys/TitleServlet?option=goDetail&id='+item.id]">
+      <div id="news-list"></div>
+  		<!-- <a v-for="item in newsList" id="news-title" v-bind:href="['http://localhost:8080/NewsEnrichSys/TitleServlet?option=goDetail&id='+item.id]">
   			&bull; {{item.name}}</br>
-  		</a>
+  		</a> -->
   	</div>
   </div>
+<!--
 <script src="js/vue.js"></script>
 <script src="js/vue-resource.js"></script>
+ -->
+ <script src="js/jquery.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

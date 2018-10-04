@@ -16,12 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 
 import name.sxli.beans.News;
+import name.sxli.test.GetQueryRelaxResult;
 import name.sxli.utils.DBHelper;
 
 /**
  * Servlet implementation class ContentServlet
  */
 public class ContentServlet extends HttpServlet {
+	public static void main(String[] args){
+		
+	}
+	
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -43,6 +48,7 @@ public class ContentServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html;charset=utf-8");    	
     	PrintWriter out = response.getWriter();
     	
@@ -145,10 +151,31 @@ public class ContentServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for(String type:types)
-				System.out.println(type);
+//			for(String type:types)
+//				System.out.println(type);
 			String jsonString = JSON.toJSONString(types,true).toString();
     	    out.write(jsonString);
+    	}
+    	else if(option.equals("getQrel")){
+    		Integer id = Integer.parseInt(request.getParameter("id"));
+    		String uriString = request.getParameter("uris");
+    		String specString = request.getParameter("spec");
+    		System.out.println(uriString);
+    		if(uriString!=null && !uriString.equals("")){
+    			String[] uris = uriString.split(";");
+    			String[] spec = specString.split(";");
+    			try {
+					int[] result = GetQueryRelaxResult.getQrelResult(InitialServlet.graphAgent, InitialServlet.oracleAgent, id, uris, spec);
+					if(result != null){
+						String jsonString = JSON.toJSONString(result,true).toString();
+			    	    out.write(jsonString);
+					} else {
+						out.write("noassociation");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+    		}
     	}
 	}
 

@@ -10,7 +10,7 @@ function getQueryVariable(variable) { //获取url参数
 
 var id = getQueryVariable("id");
 $.ajax({
-	url:"http://localhost:8080/NewsEnrichSys/ContentServlet?option=getContent&id="+id,
+	url:"http://114.212.84.29:8080/NewsEnrichSys/ContentServlet?option=getContent&id="+id,
 	type:"get",
 	dataType:"json",
 	async:false,
@@ -18,7 +18,7 @@ $.ajax({
 		$('#title').html(d.title);
 		$('#content').html(d.content);
 		$.ajax({
-			url:"http://localhost:8080/NewsEnrichSys/ContentServlet?option=getTypes&id="+id,
+			url:"http://114.212.84.29:8080/NewsEnrichSys/ContentServlet?option=getTypes&id="+id,
 			type:"get",
 			dataType:"json",
 			async:false,
@@ -72,6 +72,31 @@ function addEntity(obj) { //单独添加
 
 function removeEntity(obj) {
 	obj.remove();
+}
+
+function showResults(){
+	var uris = "";
+	var spec = "";
+	$('#car button').each(function(){
+		var id = $(this).attr('id');
+		uris += id.split(";")[0]+";";
+		$('#title a').each(function(){
+			if($(this).attr('id') == id){
+				spec += id.split(";")[0]+";";
+				return false;
+			}
+		});
+	});
+//	console.log(uris);
+	$.ajax({
+		url:"http://114.212.84.29:8080/NewsEnrichSys/ContentServlet?option=getQrel&id="+id+"&uris="+uris+"&spec="+spec,
+		type:"get",
+		dataType:"json",
+		async:false,
+		success:function(d){
+			console.log(d);
+		}
+	});
 }
 
 

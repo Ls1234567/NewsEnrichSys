@@ -24,4 +24,15 @@
     <servlet-name>ContentServlet</servlet-name>
     <url-pattern>/ContentServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>InitialServlet</display-name>
+    <servlet-name>InitialServlet</servlet-name>
+    <servlet-class>name.sxli.controller.InitialServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>InitialServlet</servlet-name>
+    <url-pattern>/InitialServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

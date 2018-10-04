@@ -44,12 +44,14 @@ public class TitleServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html;charset=utf-8");    	
     	PrintWriter out = response.getWriter();
     	
     	String option = request.getParameter("option");
     	
     	if(option.equals("show")){
+//    		System.out.println("test");
     		List<Title> titles = new ArrayList<>();
     		String sql = "select title,id from chosen_news where has_null=0 and id>6000 and id<=6100";
     		DBHelper dbHelper = new DBHelper();
